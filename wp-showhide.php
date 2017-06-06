@@ -52,7 +52,8 @@ function showhide_shortcode( $atts, $content = null ) {
 		'type' => 'pressrelease',
 		'more_text' => __( 'Show Press Release (%s More Words)', 'wp-showhide' ),
 		'less_text' => __( 'Hide Press Release (%s Less Words)', 'wp-showhide' ),
-		'hidden' => 'yes'
+		'hidden' => 'yes',
+		'content' => 'after'
 	), $atts );
 
 	// More/Less Text
@@ -73,8 +74,15 @@ function showhide_shortcode( $atts, $content = null ) {
 	}
 
 	// Format HTML Output
-	$output  = '<div id="' . $attributes['type'] . '-link-' . $post_id . '" class="sh-link ' . $attributes['type'] . '-link ' . $hidden_class .'"><a href="#" onclick="showhide_toggle(\'' . esc_js( $attributes['type'] ) . '\', ' . $post_id . ', \'' . esc_js( $more_text ) . '\', \'' . esc_js( $less_text ) . '\'); return false;" aria-expanded="' . $hidden_aria_expanded .'"><span id="' . $attributes['type'] . '-toggle-' . $post_id . '">' . $more_text . '</span></a></div>';
-	$output .= '<div id="' . $attributes['type'] . '-content-' . $post_id . '" class="sh-content ' . $attributes['type'] . '-content ' . $hidden_class . '" style="' . $hidden_css . '">' . do_shortcode( $content ) . '</div>';
+	$html_link = '<div id="' . $attributes['type'] . '-link-' . $post_id . '" class="sh-link ' . $attributes['type'] . '-link ' . $hidden_class .'"><a href="#" onclick="showhide_toggle(\'' . esc_js( $attributes['type'] ) . '\', ' . $post_id . ', \'' . esc_js( $more_text ) . '\', \'' . esc_js( $less_text ) . '\'); return false;" aria-expanded="' . $hidden_aria_expanded .'"><span id="' . $attributes['type'] . '-toggle-' . $post_id . '">' . $more_text . '</span></a></div>';
+	$html_content = '<div id="' . $attributes['type'] . '-content-' . $post_id . '" class="sh-content ' . $attributes['type'] . '-content ' . $hidden_class . '" style="' . $hidden_css . '">' . do_shortcode( $content ) . '</div>';
+
+	if($attributes['content'] == 'after') {
+		$output = $html_link.$html_content;
+	}
+	else {
+		$output = $html_content.$html_link;
+	}
 
 	return $output;
 }
